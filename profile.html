@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Profile - Predict2Earn</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="firebase.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Profile</h1>
+    <nav>
+      <a href="index.html">Play</a>
+      <a href="wallet.html">Wallet</a>
+      <a href="balance.html">Balance</a>
+      <a href="terms.html">T&C</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div id="profileArea">
+      <button id="loginBtn">🔐 Login with Google</button>
+    </div>
+  </main>
+
+  <script>
+    const loginBtn = document.getElementById('loginBtn');
+    loginBtn.onclick = () => {
+      firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(result => {
+        const user = result.user;
+        firebase.firestore().collection('users').doc(user.uid).set({ coins: 100 }, { merge: true });
+        document.getElementById('profileArea').innerHTML = `
+          <p><strong>Name:</strong> ${user.displayName}</p>
+          <p><strong>Email:</strong> ${user.email}</p>
+          <img src="${user.photoURL}" style="width:80px;border-radius:50%" />
+        `;
+      });
+    };
+  </script>
+</body>
+</html>

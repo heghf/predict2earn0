@@ -1,0 +1,87 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #f2f2f2, #cce7ff);
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background: #1a73e8;
+  color: white;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 20px;
+}
+
+nav {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+nav a, nav button {
+  color: white;
+  background: transparent;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  text-decoration: none;
+}
+
+.container {
+  background: #fff;
+  padding: 30px 20px;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  text-align: center;
+  max-width: 420px;
+  width: 90%;
+  margin: 20px auto;
+}
+
+.score {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+  margin: 20px 0;
+}
+
+.box {
+  background: #eeeeee;
+  border-radius: 6px;
+  padding-top: 100%;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.box:hover {
+  background: #dcdcdc;
+}
+
+.box.revealed {
+  background: #ffffff;
+  cursor: default;
+}
+
+.box span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+}

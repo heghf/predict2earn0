@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Balance - Predict2Earn</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="firebase.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Game Balance</h1>
+    <nav>
+      <a href="index.html">Play</a>
+      <a href="wallet.html">Wallet</a>
+      <a href="terms.html">T&C</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h2>Your Game Balance</h2>
+    <p><strong><span id="balanceCoins">0</span> Coins</strong></p>
+  </main>
+
+  <script>
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        firebase.firestore().collection('users').doc(user.uid).get().then(doc => {
+          const coins = doc.exists ? doc.data().coins : 0;
+          document.getElementById('balanceCoins').textContent = coins;
+        });
+      }
+    });
+  </script>
+</body>
+</html>

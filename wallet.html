@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Wallet - Predict2Earn</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="firebase.js"></script> <!-- Your Firebase config file -->
+</head>
+<body>
+  <header>
+    <h1>💼 Wallet</h1>
+    <nav>
+      <a href="index.html">Play</a>
+      <a href="balance.html">Balance</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h2>Your Wallet Balance</h2>
+    <p><strong><span id="walletBalance">0</span> Coins</strong></p>
+
+    <div style="margin-top: 20px;">
+      <input type="number" id="addAmount" placeholder="Enter amount to add" />
+      <button onclick="addCoins()">➕ Add</button>
+    </div>
+
+    <div style="margin-top: 10px;">
+      <input type="number" id="withdrawAmount" placeholder="Enter amount to withdraw" />
+      <button onclick="withdrawCoins()">➖ Withdraw</button>
+    </div>
+  </main>
+
+  <script>
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        loadWallet(user.uid);
+      } else {
+        alert("Please login first.");
+        window.location.href = "profile.html";
+      }
+    });
+
+    function loadWallet(uid) {
+      db.collection("users").doc(uid).get().then(doc => {
+        const coins = doc.exists ? doc.data().coins || 0 : 0;
+        document.getElementById("walletBalance").textContent = coins;
+      });
+    }
+
+    function addCoins() {
+      const amount = parseInt(document.getElementById("addAmount").value);
+      const user = auth.currentUser;
+      if (user && amount > 0) {
+        const ref = db.collection("users").doc(user.uid);
+        ref.get().then(doc => {
+          const current = doc.data().coins || 0;
+          ref.update({ coins: current + amount }).then(() => loadWallet(user.uid));
+        });
+      }
+    }
+
+    function withdrawCoins() {
+      const amount = parseInt(document.getElementById("withdrawAmount").value);
+      const user = auth.currentUser;
+      if (user && amount > 0) {
+        const ref = db.collection("users").doc(user.uid);
+        ref.get().then(doc => {
+          const current = doc.data().coins || 0;
+          const newBalance = Math.max(0, current - amount);
+          ref.update({ coins: newBalance }).then(() => loadWallet(user.uid));
+        });
+      }
+    }
+  </script>
+</body>
+</html>
